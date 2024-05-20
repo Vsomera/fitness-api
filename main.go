@@ -16,11 +16,12 @@ func main() {
 		log.Fatal("Error loading .env")
 	}
 
+	storage.InitDB()
+
 	e := echo.New()
 	e.GET("/", handlers.Home)
 	e.POST("/users", handlers.CreateUser)
-
-	storage.InitDB()
+	e.POST("/measurements", handlers.CreateMeasurement)
 
 	e.Logger.Fatal(e.Start(":8080"))
 }
