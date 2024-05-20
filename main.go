@@ -18,6 +18,7 @@ func main() {
 
 	e := echo.New()
 	e.GET("/", handlers.Home)
+	e.POST("/users", handlers.CreateUser)
 
 	storage.InitDB()
 

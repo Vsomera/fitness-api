@@ -22,11 +22,11 @@ func InitDB() {
 		dbHost, dbPort, dbUser, dbPass, dbName)
 
 	// establish database connection
-	db, err := sql.Open("postgres", psqlDbInfo)
+	var err error
+	db, err = sql.Open("postgres", psqlDbInfo)
 	if err != nil {
 		panic(err)
 	}
-	defer db.Close()
 
 	// check if database connected successfully
 	err = db.Ping()
