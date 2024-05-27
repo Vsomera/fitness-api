@@ -14,3 +14,14 @@ func CreateUser(user models.User) (models.User, error) {
 	}
 	return user, nil
 }
+
+func EditUser(user models.User) error {
+	db := storage.GetDB()
+	sqlQuery := "UPDATE users SET name = $1, email = $2, updated_at = $3 WHERE id = $4 RETURNING id"
+
+	err := db.QueryRow(sqlQuery, user.Name, user.Email, user.UpdatedAt, user.Id).Scan(&user.Id)
+	if err != nil {
+		return err
+	}
+	return nil
+}

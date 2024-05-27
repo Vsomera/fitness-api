@@ -20,7 +20,10 @@ func main() {
 
 	e := echo.New()
 	e.GET("/", handlers.Home)
+
 	e.POST("/users", handlers.CreateUser)
+	e.PUT("/users/:id", handlers.EditUser)
+
 	e.POST("/measurements", handlers.CreateMeasurement)
 
 	e.Logger.Fatal(e.Start(":8080"))
