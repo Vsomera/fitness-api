@@ -1,4 +1,4 @@
-package handlers
+package api
 
 import (
 	"fitness-api/storage"
@@ -10,7 +10,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func CreateUser(c echo.Context) error {
+func HandleCreateUser(c echo.Context) error {
 	user := types.User{}
 	c.Bind(&user)
 	newUser, err := storage.CreateUser(user)
@@ -20,7 +20,7 @@ func CreateUser(c echo.Context) error {
 	return c.JSON(http.StatusCreated, newUser)
 }
 
-func EditUser(c echo.Context) error {
+func HandleEditUser(c echo.Context) error {
 	// get param from request url
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -40,4 +40,16 @@ func EditUser(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, "User updated")
+}
+
+func HandleCreateMeasurement(c echo.Context) error {
+	var measurement types.Measurements
+	if err := c.Bind(&measurement); err != nil {
+		return err
+	}
+	newMeasurement, err := storage.CreateNewMeasurement(measurement)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+	return c.JSON(http.StatusCreated, newMeasurement)
 }

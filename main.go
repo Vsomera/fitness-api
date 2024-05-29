@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fitness-api/handlers"
+	"fitness-api/api"
 	"fitness-api/storage"
 	"log"
 
@@ -20,10 +20,10 @@ func main() {
 
 	e := echo.New()
 
-	e.POST("/users", handlers.CreateUser)
-	e.PUT("/users/:id", handlers.EditUser)
+	e.POST("/users", api.HandleCreateUser)
+	e.PUT("/users/:id", api.HandleEditUser)
 
-	e.POST("/measurements", handlers.CreateMeasurement)
+	e.POST("/measurements", api.HandleCreateMeasurement)
 
 	e.Logger.Fatal(e.Start(":8080"))
 }
