@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	"fitness-api/cmd/models"
-	"fitness-api/cmd/repositories"
+	"fitness-api/storage"
+	"fitness-api/types"
 	"net/http"
 	"strconv"
 	"time"
@@ -11,9 +11,9 @@ import (
 )
 
 func CreateUser(c echo.Context) error {
-	user := models.User{}
+	user := types.User{}
 	c.Bind(&user)
-	newUser, err := repositories.CreateUser(user)
+	newUser, err := storage.CreateUser(user)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
@@ -28,15 +28,15 @@ func EditUser(c echo.Context) error {
 	}
 
 	// bind request body and current time to user struct
-	user := models.User{}
+	user := types.User{}
 	c.Bind(&user)
 	user.Id = id
 	user.UpdatedAt = time.Now()
 
 	// edit user
-	err = repositories.EditUser(user)
+	err = storage.EditUser(user)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err.Error())
+		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
 	return c.JSON(http.StatusOK, "User updated")

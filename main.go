@@ -1,8 +1,8 @@
 package main
 
 import (
-	"fitness-api/cmd/handlers"
-	"fitness-api/cmd/storage"
+	"fitness-api/handlers"
+	"fitness-api/storage"
 	"log"
 
 	"github.com/joho/godotenv"
@@ -19,7 +19,6 @@ func main() {
 	storage.InitDB()
 
 	e := echo.New()
-	e.GET("/", handlers.Home)
 
 	e.POST("/users", handlers.CreateUser)
 	e.PUT("/users/:id", handlers.EditUser)
