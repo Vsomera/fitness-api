@@ -2,6 +2,7 @@ package storage
 
 import (
 	"fitness-api/types"
+	"fmt"
 	"time"
 )
 
@@ -50,4 +51,29 @@ func EditMeasurement(measurement types.Measurements) (types.Measurements, error)
 		return measurement, err
 	}
 	return measurement, nil
+}
+
+// Deletes a measurement by its id and user id
+func DeleteMeasurement(id, uid int) error {
+	db := GetDB()
+	query :=
+		`DELETE FROM measurements
+			WHERE 
+				id = $1 
+				AND 
+				user_id = $2`
+	result, err := db.Exec(query, id, uid)
+	if err != nil {
+		return err
+	}
+
+	// check if any rows were deleted
+	rowsDeleted, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if rowsDeleted == 0 {
+		return fmt.Errorf("no rows affected")
+	}
+	return nil
 }

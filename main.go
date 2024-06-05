@@ -41,6 +41,7 @@ func main() {
 
 	r.POST("", api.HandleCreateMeasurement)
 	r.PUT("/:id", api.HandleEditMeasurement)
+	r.DELETE("/:id", api.HandleDeleteMeasurement)
 
 	e.Logger.Fatal(e.Start(":8080"))
 }

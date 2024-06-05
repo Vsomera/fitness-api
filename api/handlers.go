@@ -76,3 +76,22 @@ func HandleEditMeasurement(c echo.Context) error {
 	}
 	return c.JSON(http.StatusCreated, editMeasurement)
 }
+
+func HandleDeleteMeasurement(c echo.Context) error {
+	// extract id param from url
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+
+	// get uid from jwt
+	userToken := c.Get("user").(*jwt.Token)
+	claims := userToken.Claims.(*types.JwtCustomClaim)
+
+	// delete measurement from database
+	err = storage.DeleteMeasurement(id, claims.UID)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, echo.Map{"error": err.Error()})
+	}
+	return c.JSON(http.StatusAccepted, echo.Map{"message": "Measurement Deleted"})
+}
