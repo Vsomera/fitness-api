@@ -19,8 +19,33 @@ func CreateUser(user types.User) (types.User, error) {
 // CreateNewMeasurement adds a new row into the db with the associated user_id
 func CreateNewMeasurement(measurement types.Measurements) (types.Measurements, error) {
 	db := GetDB()
-	query := "INSERT INTO measurements (user_id, weight, height, body_fat, created_at) VALUES ($1, $2, $3, $4, $5) RETURNING id"
+	query :=
+		`INSERT INTO measurements 
+			(user_id, weight, height, body_fat, created_at) 
+			VALUES ($1, $2, $3, $4, $5) 
+		RETURNING id`
 	err := db.QueryRow(query, measurement.UserId, measurement.Weight, measurement.Height, measurement.BodyFat, time.Now()).Scan(&measurement.Id)
+	if err != nil {
+		return measurement, err
+	}
+	return measurement, nil
+}
+
+// Updates the measurement in the database by user id and measurement id
+func EditMeasurement(measurement types.Measurements) (types.Measurements, error) {
+	db := GetDB()
+	query :=
+		`UPDATE measurements 
+			SET 
+				weight = $1, 
+				height = $2, 
+				body_fat = $3 
+			WHERE 
+				user_id = $4 
+				AND 
+				id = $5 
+			RETURNING id`
+	err := db.QueryRow(query, measurement.Weight, measurement.Height, measurement.BodyFat, measurement.UserId, measurement.Id).Scan(&measurement.Id)
 	if err != nil {
 		return measurement, err
 	}

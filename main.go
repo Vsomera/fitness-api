@@ -40,7 +40,7 @@ func main() {
 	r.Use(echojwt.WithConfig(config))
 
 	r.POST("", api.HandleCreateMeasurement)
-	// r.PUT("/:id", api.HandleEditMeasurement)
+	r.PUT("/:id", api.HandleEditMeasurement)
 
 	e.Logger.Fatal(e.Start(":8080"))
 }

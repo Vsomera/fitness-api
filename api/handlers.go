@@ -5,6 +5,7 @@ import (
 	"fitness-api/types"
 	"fitness-api/utils"
 	"net/http"
+	"strconv"
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
@@ -49,23 +50,27 @@ func HandleCreateMeasurement(c echo.Context) error {
 	return c.JSON(http.StatusCreated, newMeasurement)
 }
 
-// func HandleEditMeasurement(c echo.Context) error {
+func HandleEditMeasurement(c echo.Context) error {
 
-// 	id, err := strconv.Atoi(c.Param("id"))
-// 	if err != nil {
-// 		return c.JSON(http.StatusBadRequest, err.Error())
-// 	}
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
 
-// 	userToken := c.Get("user").(*jwt.Token)
-// 	claims := userToken.Claims.(*types.JwtCustomClaim)
+	userToken := c.Get("user").(*jwt.Token)
+	claims := userToken.Claims.(*types.JwtCustomClaim)
 
-// 	measurement := types.Measurements{}
-// 	if err := c.Bind(&measurement); err != nil {
-// 		return err
-// 	}
-// 	measurement.UserId = claims.UID
-// 	measurement.Id = id
+	measurement := types.Measurements{}
+	if err := c.Bind(&measurement); err != nil {
+		return err
+	}
+	measurement.UserId = claims.UID
+	measurement.Id = id
 
-// 	// TODO : edit measurement in DB
-// 	return c.JSON(http.StatusOK, echo.Map{"message": measurement})
-// }
+	// TODO : edit measurement in DB
+	editMeasurement, err := storage.EditMeasurement(measurement)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+	return c.JSON(http.StatusCreated, editMeasurement)
+}
