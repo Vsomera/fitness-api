@@ -52,11 +52,13 @@ func HandleCreateMeasurement(c echo.Context) error {
 
 func HandleEditMeasurement(c echo.Context) error {
 
+	// extract id param from url
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
+	// get uid from jwt
 	userToken := c.Get("user").(*jwt.Token)
 	claims := userToken.Claims.(*types.JwtCustomClaim)
 
@@ -67,7 +69,7 @@ func HandleEditMeasurement(c echo.Context) error {
 	measurement.UserId = claims.UID
 	measurement.Id = id
 
-	// TODO : edit measurement in DB
+	// edit measurement in DB
 	editMeasurement, err := storage.EditMeasurement(measurement)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
